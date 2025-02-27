@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 mongoose.Promise = global.Promise;
 mongoose
   .connect(config.mongoUri, {
-    userNewUrlParser: true,
+    useNewUrlParser: true,
   })
   .then(() => console.log("Connected to MongoDB"));
 

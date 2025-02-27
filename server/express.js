@@ -4,8 +4,8 @@ import cookieParser from 'cookie-parser';
 import compress from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
-import userRoutes from './routes/user.routes';
-import contactRoutes from './routes/contact.routes';
+import userRoutes from './routes/user.routes.js';
+import contactRoutes from './routes/contact.routes.js';
 
 const app = express();
 app.use(bodyParser.json());

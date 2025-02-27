@@ -1,6 +1,6 @@
-import contactModel from "../models/contact.model";
-import extend from "lodash/extend";
-import errorHandler from "./helpers/dbErrorHandler";
+import contactModel from "../models/contact.model.js";
+import extend from "lodash/extend.js";
+import errorHandler from "../helpers/dbErrorHandler.js";
 
 const create = async (req, res) => {
     const contact = new contactModel(req.body);
