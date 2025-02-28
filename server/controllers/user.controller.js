@@ -31,6 +31,7 @@ const list = async (req, res) => {
 const userByID = async (req, res, next, id) => {
   try {
     let user = await User.findById(id);
+    console.log("userById: ", id);
     if (!user)
       return res.status("400").json({
         error: "User not found",
@@ -67,23 +68,40 @@ const update = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-    try {
-        let user = req.profile;
-        let deletedUser = await user.remove();
-        deletedUser.hashed_password = undefined;
-        deletedUser.salt = undefined;
-        res.json(deletedUser);
-    } catch (err) {
-        return res.status(400).json({
-        error: errorHandler.getErrorMessage(err),
-        });
-    }
+  try {
+    let user = req.profile;
+    console.log("removing: ", user);
+    let deletedUser = await user.deleteOne();
+    deletedUser.hashed_password = undefined;
+    deletedUser.salt = undefined;
+    res.json(deletedUser);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
+  }
 };
 
 const removeAll = async (req, res) => {
+  let { ids } = req.body; // Assuming IDs are sent in the request body
   try {
-    await User.deleteMany({});
-    res.json({ message: "All users removed" });
+    if (!Array.isArray(ids) || ids.length === 0) {
+      const allUsers = await User.find({}, "_id"); // Get all user IDs
+      ids = allUsers.map((user) => user._id); // Extract only _id values
+      // return res.status(400).json({
+      //   error: "Please provide an array of IDs to delete.",
+      // });
+    }
+
+    if (ids.length === 0) {
+      return res.status(400).json({ error: "No users found to delete." });
+    }
+
+    const result = await User.deleteMany({ _id: { $in: ids } });
+    
+    return res.status(200).json({
+      message: `${result.deletedCount} users successfully deleted!`,
+    });
   } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err),
