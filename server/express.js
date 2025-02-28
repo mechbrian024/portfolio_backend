@@ -16,4 +16,7 @@ app.use(helmet());
 app.use(cors());
 app.use('/', userRoutes);
 app.use('/', contactRoutes);
+app.get("/", (req, res) => {    
+    res.json({message: "Welcome to the Brian's MERN Skeleton"});
+  });
 export default app;
